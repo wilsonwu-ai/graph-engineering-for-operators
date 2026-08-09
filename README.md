@@ -4,6 +4,8 @@
 
 Written for people who run businesses, not research labs.
 
+> First in a series. The second is [Eval Engineering for Operators](https://github.com/wilsonwu-ai/eval-engineering-for-operators), on building the gate that decides what your agents are allowed to ship. This one is about throughput. That one is about what you do with the output.
+
 ---
 
 I run three things at once: an investment vehicle, a revenue org at a portfolio company, and an apparel business. I am also most of the way through a computer science master's at night. Time is the only input I cannot buy more of, so I spend a lot of my thinking on the same question a capital allocator asks about money: *given a fixed pool, where does the next unit go, and what does it buy?*
