@@ -402,8 +402,16 @@ The clearest public data point I have seen is the Bun runtime port that circulat
 Practical guardrails I use:
 
 1. **Cap the first run.** "20 files on this first run," not "every file in the repo." You are buying information about what a run costs before you buy the run.
-2. **Log what you dropped.** A capped run that does not say it was capped is a lie by omission to your future self.
-3. **Tier the models.** Not every node needs your best one. Bounded, repetitive nodes (extract this field, classify this ticket) go cheap. Judgment nodes (adjudicate this finding, write the report) stay up top. By default every subagent inherits the session model, so a wide run bills entirely at your session tier unless you say otherwise.
+2. **Cap every axis, not just the outer one.** This is the guardrail I got wrong in my own reference script, so it goes here rather than in a footnote. `CAP = 20` on the site list reads like a bound on the run. It is not. If stage two spawns one verifier per *finding*, twenty sites returning fifteen findings each is 20 auditors + 300 verifiers + 1 synthesizer. The cap was on the wrong axis and the run is fifteen times the size you thought you authorized. Bound the **product**, compute the worst case before anything spawns, and refuse to start if it clears the 1000-agent backstop:
+
+```js
+const worstCase = SITES.length * (1 + MAX_FINDINGS_PER_SITE) + 1;
+log(`Worst case this run: ${worstCase} agents.`);
+if (worstCase > 1000) return { summary: 'Refusing to start.', ranked: [] };
+```
+
+3. **Log what you dropped.** A capped run that does not say it was capped is a lie by omission to your future self.
+4. **Tier the models — on every node, with no omissions.** Not every node needs your best one. Bounded, repetitive nodes (extract this field, classify this ticket) go cheap. Judgment nodes (adjudicate this finding, write the report) stay up top. By default every subagent inherits the session model, so a wide run bills entirely at your session tier unless you say otherwise. The sharp edge: an omitted `model` is not a neutral default, it is *whatever your session is pinned to*. If you run a strong model by default, the node you forgot to tier is usually the most multiplied one in the graph — the verifier — and it is now also the most expensive one. Name the tier on every node, including the ones you think are obvious.
 
 ```js
 // boring, bounded, repetitive: send it down
@@ -536,6 +544,8 @@ Two more that are easy to trip on:
 - **`pipeline()` stage callbacks receive `(prevResult, originalItem, index)`.** That second argument is how you label later stages without threading context through stage one's return value. Most examples omit it and then contort the first stage to carry metadata it should not have to carry.
 
 None of this changes the ideas in those articles. It does change whether your first script runs.
+
+The full contract, in a form you can check a script against line by line, is in [`API_CONTRACT.md`](API_CONTRACT.md). Verified against Claude Code v2.1.226. Check `claude --version` against that before you trust it — this surface is moving quickly.
 
 ---
 
