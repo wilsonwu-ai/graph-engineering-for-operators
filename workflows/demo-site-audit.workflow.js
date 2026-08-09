@@ -69,15 +69,40 @@ const REPORT = {
 };
 
 // ---------------------------------------------------------------------------
-// Cap the first run. You are buying information about cost, not the result.
+// Cap EVERY axis, not just the outer one.
+// You are buying information about cost, not the result.
+//
+// The trap this fixes, which the first version of this file walked straight into:
+// `CAP = 20` reads like a bound on the run, but it only bounds the OUTER fan-out.
+// Stage 2 spawns one verifier per FINDING, so twenty sites returning fifteen findings
+// each is 20 auditors + 300 verifiers + 1 synthesizer = 321 agents, not 20.
+// Bound the product, and say the worst case out loud before anything spawns.
 // ---------------------------------------------------------------------------
 
-const CAP = 20;
+const CAP = 20; // sites audited this run
+const MAX_FINDINGS_PER_SITE = 10; // verifiers spawned per site, at most
+const AGENT_BACKSTOP = 1000; // the runtime's hard per-workflow ceiling
+
 const requested = (args && args.sites) || [];
 const SITES = requested.slice(0, CAP);
 
 if (requested.length > SITES.length) {
   log(`Capped at ${CAP} sites. ${requested.length - SITES.length} not audited this run.`);
+}
+
+const worstCase = SITES.length * (1 + MAX_FINDINGS_PER_SITE) + 1;
+log(
+  `Worst case this run: ${worstCase} agents — ${SITES.length} auditors + up to ` +
+    `${SITES.length * MAX_FINDINGS_PER_SITE} verifiers + 1 synthesizer.`,
+);
+
+if (worstCase > AGENT_BACKSTOP) {
+  return {
+    summary:
+      `Refusing to start: worst case ${worstCase} agents exceeds the ${AGENT_BACKSTOP} backstop. ` +
+      `Lower CAP or MAX_FINDINGS_PER_SITE.`,
+    ranked: [],
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -100,16 +125,39 @@ const perSite = await pipeline(
     ),
 
   // stage 2: one skeptic per finding. It sees the FINDING, never the auditor's reasoning.
-  (found, site) =>
-    parallel(
-      found.issues.map((issue) => () =>
+  //
+  // Two things here are easy to get wrong and both cost real money:
+  //   1. This is the MULTIPLIED axis. One chatty site with forty findings spawns forty
+  //      verifiers on its own. Cap it, and log what the cap dropped.
+  //   2. An omitted `model` inherits the SESSION tier. If your session is pinned to a
+  //      strong model, omitting it here makes the most-multiplied node in the graph the
+  //      most expensive one in the graph. Name the tier explicitly on every node.
+  (found, site) => {
+    const issues = (found && found.issues) || [];
+    const checking = issues.slice(0, MAX_FINDINGS_PER_SITE);
+
+    if (issues.length > checking.length) {
+      log(
+        `${site}: ${issues.length - checking.length} findings past the per-site cap, not verified.`,
+      );
+    }
+
+    return parallel(
+      checking.map((issue) => () =>
         agent(
           `Try to REFUTE this finding. Open the URL and check it yourself. ` +
             `If you are not certain it holds up, return refuted:true.\n\n${JSON.stringify(issue)}`,
-          { label: `verify:${site}`, phase: 'Verify', schema: VERDICT },
+          {
+            label: `verify:${site}`,
+            phase: 'Verify',
+            schema: VERDICT,
+            model: 'sonnet',
+            effort: 'medium',
+          },
         ).then((v) => ({ ...issue, kept: Boolean(v) && !v.refuted, why: v && v.why })),
       ),
-    ),
+    );
+  },
 );
 
 // ---------------------------------------------------------------------------

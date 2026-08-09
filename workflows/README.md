@@ -4,9 +4,9 @@ Four specs I actually use. Each one is the same diamond (fan out, reduce, verify
 
 **How to run one:** paste the spec into Claude Code with the word **workflow** in your prompt. Claude writes the orchestration script and spawns the fleet. Swap the bracketed parts for your own.
 
-**Before your first run:** keep the `CAP` line. It is the difference between buying information about what a run costs and just buying the run.
+**Before your first run:** keep the `CAP` line, and make sure it caps the axis that actually multiplies. A cap on the outer list while the per-item verify fan-out runs free is not a cap — twenty sites at fifteen findings each is 321 agents, not 20. See [§13 guardrail 2](../README.md#13-what-it-costs-honestly).
 
-There is also a full runnable script in [`demo-site-audit.workflow.js`](demo-site-audit.workflow.js) if you would rather read the code than the prose.
+There is also a full runnable script in [`demo-site-audit.workflow.js`](demo-site-audit.workflow.js) if you would rather read the code than the prose, and executable versions of all four specs in [`runnable/`](runnable/) — read the caveat at the top of that README before installing one.
 
 ---
 
@@ -94,6 +94,7 @@ REPORT:      final list ranked by severity, plus what got dropped
 | `CONTRACT` | Forces validated structured output instead of prose the next node has to guess at. |
 | `ANCHOR` | Gives the verifier something that cannot argue back. Without it you built an echo. |
 | `VERIFY` | The worker never checks its own work. Pass the finding, not the transcript. |
-| `CAP` | Your first run is a purchase of information, not of the result. |
+| `CAP` | Your first run is a purchase of information, not of the result. Cap **every** axis — the outer list *and* the per-item fan-out beneath it — then state the worst-case agent count before anything spawns. |
+| `MODEL` | Name the tier on every node. An omitted `model` inherits your session tier, so the node you forgot is usually the most multiplied one in the graph and now also the most expensive. |
 | `ON FAIL` | A silent dead node turns a partial dataset into a report that reads as complete. |
 | `HUMAN GATE` | Running wide without you is the point. Shipping without you is not. |
