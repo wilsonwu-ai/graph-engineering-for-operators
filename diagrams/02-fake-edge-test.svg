@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 420" width="880" height="420" role="img" aria-label="Diagram: the fake edge test. A real edge is when the second step reads the first step's output. A fake edge is when nothing crosses the arrow, which means the two steps can run at the same time.">
+  <defs>
+    <marker id="arrowAmber2" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 1 L 11 6 L 0 11 z" fill="#D97740"/>
+    </marker>
+    <marker id="arrowGrey" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 1 L 11 6 L 0 11 z" fill="#A9B4BB"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="880" height="420" rx="14" fill="#FBF7F0"/>
+  <rect x="0.75" y="0.75" width="878.5" height="418.5" rx="13.5" fill="none" stroke="#E5DDD0" stroke-width="1.5"/>
+
+  <text x="40" y="52" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#1C2B33">The Fake Edge Test</text>
+  <rect x="40" y="64" width="64" height="4" rx="2" fill="#D97740"/>
+  <text x="40" y="92" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" fill="#5B6B75">At every "and then" in your workflow, ask one question: does this step actually read the last step's output?</text>
+
+  <rect x="40" y="118" width="112" height="24" rx="12" fill="#E8F0E9"/>
+  <text x="96" y="135" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="1" fill="#4A7C59">REAL EDGE</text>
+
+  <rect x="40" y="156" width="250" height="70" rx="10" fill="#FFFFFF" stroke="#E5DDD0" stroke-width="1.5"/>
+  <text x="165" y="187" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#1C2B33">Pull the Q3 demo numbers</text>
+  <text x="165" y="208" text-anchor="middle" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#5B6B75">out: { demos, closes }</text>
+
+  <line x1="300" y1="191" x2="370" y2="191" stroke="#D97740" stroke-width="2.5" marker-end="url(#arrowAmber2)"/>
+
+  <rect x="380" y="156" width="250" height="70" rx="10" fill="#FFFFFF" stroke="#E5DDD0" stroke-width="1.5"/>
+  <text x="505" y="187" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#1C2B33">Model close-rate sensitivity</text>
+  <text x="505" y="208" text-anchor="middle" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#5B6B75">in: { demos, closes }</text>
+
+  <text x="660" y="184" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#4A7C59">Data crosses.</text>
+  <text x="660" y="206" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" fill="#5B6B75">Keep the order.</text>
+
+  <line x1="40" y1="250" x2="840" y2="250" stroke="#EFE8DC" stroke-width="1.5"/>
+
+  <rect x="40" y="270" width="112" height="24" rx="12" fill="#F7E7E5"/>
+  <text x="96" y="287" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="1" fill="#B4483C">FAKE EDGE</text>
+
+  <rect x="40" y="308" width="250" height="70" rx="10" fill="#FFFFFF" stroke="#E5DDD0" stroke-width="1.5"/>
+  <text x="165" y="339" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#1C2B33">Audit demo site A</text>
+  <text x="165" y="360" text-anchor="middle" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#5B6B75">out: { issues }</text>
+
+  <line x1="300" y1="343" x2="370" y2="343" stroke="#A9B4BB" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowGrey)"/>
+  <line x1="326" y1="334" x2="344" y2="352" stroke="#B4483C" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="344" y1="334" x2="326" y2="352" stroke="#B4483C" stroke-width="2.5" stroke-linecap="round"/>
+
+  <rect x="380" y="308" width="250" height="70" rx="10" fill="#FFFFFF" stroke="#E5DDD0" stroke-width="1.5"/>
+  <text x="505" y="339" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#1C2B33">Audit demo site B</text>
+  <text x="505" y="360" text-anchor="middle" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#5B6B75">in: nothing from A</text>
+
+  <text x="660" y="336" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#B4483C">Nothing crosses.</text>
+  <text x="660" y="358" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" fill="#5B6B75">Cut the wait. Run</text>
+  <text x="660" y="376" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" fill="#5B6B75">them side by side.</text>
+</svg>
