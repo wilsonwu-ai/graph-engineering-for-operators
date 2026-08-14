@@ -5,6 +5,8 @@
 Written for people who run businesses, not research labs.
 
 > First in a series. The second is [Eval Engineering for Operators](https://github.com/wilsonwu-ai/eval-engineering-for-operators), on building the gate that decides what your agents are allowed to ship. This one is about throughput. That one is about what you do with the output.
+>
+> **Want the code instead of the argument?** [**Graph Engineering Kit**](https://github.com/wilsonwu-ai/graph-engineering-kit) is the runnable half of this write-up: a `/graph` planner that prices a job before spawning it, ten always-on rules, four production workflows, and an Amdahl calculator that tells you when fanning out is not worth it. It also carries three rules this article predates — the reverse fake edge test, bounding the fan-*in*, and treating a human gate as topology rather than prompt wording.
 
 ---
 
